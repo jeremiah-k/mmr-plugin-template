@@ -1,2 +1,2 @@
-# mmr-plugin
+# mmr-plugin-template
 MMRelay Plugin Template
