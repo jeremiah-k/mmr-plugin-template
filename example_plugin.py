@@ -8,8 +8,6 @@ class Plugin(BasePlugin):
         if "decoded" in packet and "portnum" in packet["decoded"]:
             if packet["decoded"]["portnum"] == "TEXT_MESSAGE_APP":
                 self.logger.debug("Debug logging on Meshtastic TEXT_MESSAGE_APP message")
-        else:
-            self.logger.debug("Non-TEXT_MESSAGE_APP packet received. Ignoring.")
 
     async def handle_room_message(self, room, event, full_message):
         self.logger.debug("Debug logging on Matrix message")
