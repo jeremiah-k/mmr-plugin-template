@@ -5,6 +5,36 @@ Fork this repo and create a new one with the name of your plugin, rename `exampl
 
 For more information on the basics creating community plugins see the [MMRelay Community Plugin Development Guide](https://github.com/geoffwhittington/meshtastic-matrix-relay/wiki/Community-Plugin-Development-Guide).
 
+## Important Notes
+
+### Matrix Client Usage
+
+Always use the global `matrix_client` from `matrix_utils` or the `send_matrix_message()` method from `BasePlugin`. Never call `connect_matrix()` directly in your plugins, as this will reinitialize the client and cause unnecessary credential reloading.
+
+```python
+# Import the global matrix_client
+from mmrelay.matrix_utils import matrix_client
+
+# Check if matrix_client is initialized before using it
+if matrix_client is None:
+    self.logger.error("Matrix client is not initialized. Cannot send message.")
+    return False
+
+# Preferred method: Use send_matrix_message from BasePlugin
+await self.send_matrix_message(room_id=room.room_id, message="Your message here")
+```
+
+### Plugin Name Initialization
+
+Always initialize `self.plugin_name` in the `__init__` method **before** calling `super().__init__()`, even though it's also defined as a class variable:
+
+```python
+def __init__(self):
+    # Set plugin_name BEFORE calling super().__init__()
+    self.plugin_name = "your_plugin_name"
+    super().__init__()
+```
+
 
 ## Code Quality Tools
 This is completely optional, but I recommend making use of [trunk.io](https://trunk.io)'s code quality tools. They are free for open source projects and are a great way to help keep your code clean and maintainable as you go.
