@@ -3,7 +3,7 @@
 
 Fork this repo and create a new one with the name of your plugin, rename `example_plugin.py` to the name of your plugin and go from there.
 
-For more information on the basics creating community plugins see the [MMRelay Community Plugin Development Guide](https://github.com/geoffwhittington/meshtastic-matrix-relay/wiki/Community-Plugin-Development-Guide).
+For more information on the basics creating plugins see the [MMRelay Plugin Development Guide](https://github.com/geoffwhittington/meshtastic-matrix-relay/wiki/Plugin-Development-Guide).
 
 ## Important Notes
 
@@ -26,13 +26,17 @@ await self.send_matrix_message(room_id=room.room_id, message="Your message here"
 
 ### Plugin Name Initialization
 
-Always initialize `self.plugin_name` in the `__init__` method **before** calling `super().__init__()`, even though it's also defined as a class variable:
+Define `plugin_name` as a class variable in your plugin class. This is the recommended way to identify your plugin:
 
 ```python
-def __init__(self):
-    # Set plugin_name BEFORE calling super().__init__()
-    self.plugin_name = "your_plugin_name"
-    super().__init__()
+class Plugin(BasePlugin):
+    plugin_name = "your_plugin_name"  # Define plugin_name as a class variable
+
+    # No need to override __init__() unless you need custom initialization
+
+    async def handle_meshtastic_message(self, packet, formatted_message, longname, meshnet_name):
+        # Your implementation here
+        pass
 ```
 
 

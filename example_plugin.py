@@ -3,12 +3,8 @@ from mmrelay.matrix_utils import matrix_client, bot_command
 from mmrelay.meshtastic_utils import connect_meshtastic
 
 class Plugin(BasePlugin):
-    plugin_name = "example_plugin"
+    plugin_name = "example_plugin"  # Define plugin_name as a class variable
 
-    def __init__(self):
-        # IMPORTANT: Set plugin_name BEFORE calling super().__init__()
-        self.plugin_name = "example_plugin"
-        super().__init__()
 
     async def handle_meshtastic_message(self, packet, formatted_message, longname, meshnet_name):
         # Check if the packet is a TEXT_MESSAGE_APP packet
