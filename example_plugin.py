@@ -6,14 +6,19 @@ from mmrelay.meshtastic_utils import connect_meshtastic
 class Plugin(BasePlugin):
     plugin_name = "example_plugin"  # Define plugin_name as a class variable
 
+    @property
+    def description(self):
+        """Get the plugin description for help text."""
+        return "Example plugin demonstrating basic Meshtastic and Matrix message handling"
+
     async def handle_meshtastic_message(self, packet, formatted_message, longname, meshnet_name):
-        # Check if the packet is a TEXT_MESSAGE_APP packet
         """
         Asynchronously processes incoming Meshtastic packets, handling only text messages and verifying channel enablement.
-        
+
         Returns:
             bool: False if the message channel is not enabled for this plugin; otherwise, no explicit return value.
         """
+        # Check if the packet is a TEXT_MESSAGE_APP packet
         if "decoded" in packet and "portnum" in packet["decoded"] and packet["decoded"]["portnum"] == "TEXT_MESSAGE_APP":
             self.logger.debug("Debug logging on Meshtastic TEXT_MESSAGE_APP message")
 
@@ -32,12 +37,17 @@ class Plugin(BasePlugin):
             if not self.is_channel_enabled(channel, is_direct_message=is_direct_message):
                 return False
 
+            # Add your plugin logic here
+            # For example, you could check for specific text patterns, commands, etc.
+
+        return False
+
     async def handle_room_message(self, room, event, full_message):
         """
         Asynchronously handles Matrix room messages, responding to commands directed at this plugin.
-        
+
         Returns:
-            bool: True if a command was processed and a response sent; False otherwise or if the Matrix client is not initialized.
+            bool: True if a command was processed and a response sent; False otherwise.
         """
         self.logger.debug("Debug logging on Matrix message")
 
