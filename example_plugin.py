@@ -8,6 +8,12 @@ class Plugin(BasePlugin):
 
     async def handle_meshtastic_message(self, packet, formatted_message, longname, meshnet_name):
         # Check if the packet is a TEXT_MESSAGE_APP packet
+        """
+        Asynchronously processes incoming Meshtastic packets, handling only text messages and verifying channel enablement.
+        
+        Returns:
+            bool: False if the message channel is not enabled for this plugin; otherwise, no explicit return value.
+        """
         if "decoded" in packet and "portnum" in packet["decoded"] and packet["decoded"]["portnum"] == "TEXT_MESSAGE_APP":
             self.logger.debug("Debug logging on Meshtastic TEXT_MESSAGE_APP message")
 
@@ -27,6 +33,12 @@ class Plugin(BasePlugin):
                 return False
 
     async def handle_room_message(self, room, event, full_message):
+        """
+        Asynchronously handles Matrix room messages, responding to commands directed at this plugin.
+        
+        Returns:
+            bool: True if a command was processed and a response sent; False otherwise or if the Matrix client is not initialized.
+        """
         self.logger.debug("Debug logging on Matrix message")
 
         # Example of checking if a message is a command for this plugin
