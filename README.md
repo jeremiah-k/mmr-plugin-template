@@ -35,10 +35,20 @@ class Plugin(BasePlugin):
 
 ## Code Quality Tools
 
-This is completely optional, but I recommend making use of [trunk.io](https://trunk.io)'s code quality tools. They are free for open source projects and are a great way to help keep your code clean and maintainable as you go.
+This template includes [Trunk](https://trunk.io) for code quality and formatting. Trunk helps maintain clean, consistent code by automatically checking for issues and applying fixes.
 
-This repo has already been initialized with [Code Quality Tools](https://docs.trunk.io/code-quality) and the configuration files are located in the `.trunk` folder in this repository.
+### Using Trunk
 
-To use this functionality you will need to install [VS Code](https://code.visualstudio.com/) (or [VS Codium](https://vscodium.com/)) and the [Code Quality Tools CLI](https://docs.trunk.io/code-quality/setup-and-installation/initialize-trunk).
+The Trunk binary is included in this repository at `.trunk/trunk`. To check and fix your code:
 
-The rest is handled automatically in code editor as you work.
+```bash
+.trunk/trunk check --fix --all
+```
+
+This will:
+- Format your Python code with Black
+- Check for linting issues with Ruff and other tools
+- Apply automatic fixes where possible
+- Ensure your code follows best practices
+
+Trunk is completely optional but recommended for maintaining high code quality. The configuration is already set up in the `.trunk` directory, so you can start using it immediately without any additional setup.
