@@ -1,6 +1,6 @@
-from mmrelay.plugins.base_plugin import BasePlugin
 from mmrelay.matrix_utils import bot_command
 from mmrelay.meshtastic_utils import connect_meshtastic
+from mmrelay.plugins.base_plugin import BasePlugin
 
 
 class Plugin(BasePlugin):
@@ -9,9 +9,13 @@ class Plugin(BasePlugin):
     @property
     def description(self):
         """Get the plugin description for help text."""
-        return "Example plugin demonstrating basic Meshtastic and Matrix message handling"
+        return (
+            "Example plugin demonstrating basic Meshtastic and Matrix message handling"
+        )
 
-    async def handle_meshtastic_message(self, packet, formatted_message, longname, meshnet_name):
+    async def handle_meshtastic_message(
+        self, packet, formatted_message, longname, meshnet_name
+    ):
         """
         Asynchronously processes incoming Meshtastic packets, handling only text messages and verifying channel enablement.
 
@@ -19,7 +23,11 @@ class Plugin(BasePlugin):
             bool: True if the message was handled by this plugin, False otherwise.
         """
         # Check if the packet is a TEXT_MESSAGE_APP packet
-        if "decoded" in packet and "portnum" in packet["decoded"] and packet["decoded"]["portnum"] == "TEXT_MESSAGE_APP":
+        if (
+            "decoded" in packet
+            and "portnum" in packet["decoded"]
+            and packet["decoded"]["portnum"] == "TEXT_MESSAGE_APP"
+        ):
             self.logger.debug("Debug logging on Meshtastic TEXT_MESSAGE_APP message")
 
             # Example of how to get the Meshtastic client
@@ -30,11 +38,13 @@ class Plugin(BasePlugin):
             is_direct_message = False  # Default to False
             if meshtastic_client and meshtastic_client.myInfo:
                 myId = meshtastic_client.myInfo.my_node_num
-                is_direct_message = (toId == myId)
+                is_direct_message = toId == myId
 
             # Example of checking if the channel is enabled for this plugin
             channel = packet.get("channel", 0)
-            if not self.is_channel_enabled(channel, is_direct_message=is_direct_message):
+            if not self.is_channel_enabled(
+                channel, is_direct_message=is_direct_message
+            ):
                 return False
 
             # Add your plugin logic here
@@ -59,7 +69,7 @@ class Plugin(BasePlugin):
             # The send_matrix_message method handles client initialization checks and logs an error if needed
             await self.send_matrix_message(
                 room_id=room.room_id,
-                message="This is a response from the example plugin"
+                message="This is a response from the example plugin",
             )
             return True
 

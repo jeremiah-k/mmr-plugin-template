@@ -1,4 +1,5 @@
 # mmr-plugin-template
+
 ## MMRelay Plugin Template
 
 Fork this repo and create a new one with the name of your plugin, rename `example_plugin.py` to the name of your plugin and go from there.
@@ -32,8 +33,8 @@ class Plugin(BasePlugin):
         pass
 ```
 
-
 ## Code Quality Tools
+
 This is completely optional, but I recommend making use of [trunk.io](https://trunk.io)'s code quality tools. They are free for open source projects and are a great way to help keep your code clean and maintainable as you go.
 
 This repo has already been initialized with [Code Quality Tools](https://docs.trunk.io/code-quality) and the configuration files are located in the `.trunk` folder in this repository.
