@@ -1,6 +1,6 @@
-from mmrelay.matrix_utils import bot_command
-from mmrelay.meshtastic_utils import connect_meshtastic
 from mmrelay.plugins.base_plugin import BasePlugin
+from mmrelay.meshtastic_utils import connect_meshtastic
+from mmrelay.matrix_utils import bot_command
 
 
 class Plugin(BasePlugin):
