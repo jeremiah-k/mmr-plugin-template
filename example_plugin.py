@@ -16,7 +16,7 @@ class Plugin(BasePlugin):
         Asynchronously processes incoming Meshtastic packets, handling only text messages and verifying channel enablement.
 
         Returns:
-            bool: False if the message channel is not enabled for this plugin; otherwise, no explicit return value.
+            bool: True if the message was handled by this plugin, False otherwise.
         """
         # Check if the packet is a TEXT_MESSAGE_APP packet
         if "decoded" in packet and "portnum" in packet["decoded"] and packet["decoded"]["portnum"] == "TEXT_MESSAGE_APP":
@@ -39,6 +39,9 @@ class Plugin(BasePlugin):
 
             # Add your plugin logic here
             # For example, you could check for specific text patterns, commands, etc.
+
+            # Return True to indicate the message was processed
+            return True
 
         return False
 
