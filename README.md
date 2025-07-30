@@ -79,6 +79,7 @@ The Trunk binary is included in this repository at `.trunk/trunk`. To check and 
 ```
 
 This will:
+
 - Format your Python code with Black
 - Check for linting issues with Ruff and other tools
 - Apply automatic fixes where possible

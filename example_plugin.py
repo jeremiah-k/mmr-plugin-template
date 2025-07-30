@@ -1,5 +1,5 @@
-from mmrelay.plugins.base_plugin import BasePlugin
 from mmrelay.matrix_utils import bot_command
+from mmrelay.plugins.base_plugin import BasePlugin
 
 
 class Plugin(BasePlugin):
@@ -32,6 +32,7 @@ class Plugin(BasePlugin):
             # Example of checking if a message is a direct message
             toId = packet.get("to")
             from mmrelay.meshtastic_utils import connect_meshtastic
+
             meshtastic_client = connect_meshtastic()
             is_direct_message = False  # Default to False
             if meshtastic_client and meshtastic_client.myInfo:
@@ -55,7 +56,9 @@ class Plugin(BasePlugin):
                     success = self.send_meshtastic_message(
                         text="Hello from the example plugin!",
                         channel=channel,
-                        destination_id=packet.get("fromId") if is_direct_message else None
+                        destination_id=(
+                            packet.get("fromId") if is_direct_message else None
+                        ),
                     )
 
                     if success:
