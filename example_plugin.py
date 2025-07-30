@@ -1,5 +1,4 @@
 from mmrelay.plugins.base_plugin import BasePlugin
-from mmrelay.meshtastic_utils import connect_meshtastic
 from mmrelay.matrix_utils import bot_command
 
 
@@ -30,11 +29,10 @@ class Plugin(BasePlugin):
         ):
             self.logger.debug("Debug logging on Meshtastic TEXT_MESSAGE_APP message")
 
-            # Example of how to get the Meshtastic client
-            meshtastic_client = connect_meshtastic()
-
             # Example of checking if a message is a direct message
             toId = packet.get("to")
+            from mmrelay.meshtastic_utils import connect_meshtastic
+            meshtastic_client = connect_meshtastic()
             is_direct_message = False  # Default to False
             if meshtastic_client and meshtastic_client.myInfo:
                 myId = meshtastic_client.myInfo.my_node_num
@@ -47,11 +45,27 @@ class Plugin(BasePlugin):
             ):
                 return False
 
-            # Add your plugin logic here
-            # For example, you could check for specific text patterns, commands, etc.
+            # Example: Check for a specific command
+            if "decoded" in packet and "text" in packet["decoded"]:
+                message_text = packet["decoded"]["text"].strip()
 
-            # Return True to indicate the message was processed
-            return True
+                if message_text.lower() == "!example":
+                    # RECOMMENDED: Use the new message queue system
+                    # This automatically handles rate limiting and connection state
+                    success = self.send_meshtastic_message(
+                        text="Hello from the example plugin!",
+                        channel=channel,
+                        destination_id=packet.get("fromId") if is_direct_message else None
+                    )
+
+                    if success:
+                        self.logger.info("Response queued successfully")
+                        return True  # Indicate we handled the message
+                    else:
+                        self.logger.error("Failed to queue response")
+
+            # Return False if we didn't handle the message
+            return False
 
         return False
 
