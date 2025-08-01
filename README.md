@@ -14,11 +14,11 @@ MMRelay now includes an automatic message queue system that handles rate limitin
 
 #### Sending Meshtastic Messages (RECOMMENDED)
 
-Use the `send_meshtastic_message()` method from `BasePlugin`. This automatically queues messages and handles rate limiting:
+Use the `send_message()` method from `BasePlugin`. This automatically queues messages and handles rate limiting:
 
 ```python
 # RECOMMENDED: Use the message queue system
-success = self.send_meshtastic_message(
+success = self.send_message(
     text="Your message here",
     channel=0,  # Channel index
     destination_id=node_id  # Optional: for direct messages
@@ -30,16 +30,18 @@ else:
     self.logger.error("Failed to queue message")
 ```
 
-#### Legacy Method (Still Works)
+#### Legacy Method (Still Works - Automatically Queued!)
 
-Direct Meshtastic client calls still work but bypass the queue system:
+Direct Meshtastic client calls still work and are **automatically queued** in v1.1+:
 
 ```python
-# Legacy method - still works but not recommended
+# Legacy method - still works and is automatically queued
 from mmrelay.meshtastic_utils import connect_meshtastic
 meshtastic_client = connect_meshtastic()
 meshtastic_client.sendText(text="Your message", channelIndex=0)
 ```
+
+**Note**: In v1.1+, even legacy `sendText()` calls are automatically queued and rate-limited. Your existing plugin code works exactly the same!
 
 ### Matrix Client Usage
 
