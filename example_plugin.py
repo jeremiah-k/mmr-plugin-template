@@ -30,14 +30,7 @@ class Plugin(BasePlugin):
             self.logger.debug("Debug logging on Meshtastic TEXT_MESSAGE_APP message")
 
             # Example of checking if a message is a direct message
-            toId = packet.get("to")
-            from mmrelay.meshtastic_utils import connect_meshtastic
-
-            meshtastic_client = connect_meshtastic()
-            is_direct_message = False  # Default to False
-            if meshtastic_client and meshtastic_client.myInfo:
-                myId = meshtastic_client.myInfo.my_node_num
-                is_direct_message = toId == myId
+            is_direct_message = self.is_direct_message(packet)
 
             # Example of checking if the channel is enabled for this plugin
             channel = packet.get("channel", 0)
