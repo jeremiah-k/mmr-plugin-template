@@ -8,6 +8,27 @@ For more information on the basics of creating plugins see the [MMRelay Plugin D
 
 ## Important Notes
 
+### Sending Messages
+
+#### Sending Meshtastic Messages
+
+Use the `send_message()` method from `BasePlugin`. This automatically handles queuing and rate limiting:
+
+```python
+success = self.send_message(
+    text="Your message here",
+    channel=0,  # Channel index
+    destination_id=node_id  # Optional: for direct messages
+)
+
+if success:
+    self.logger.info("Message sent successfully")
+else:
+    self.logger.error("Failed to send message")
+```
+
+
+
 ### Matrix Client Usage
 
 Always use the `send_matrix_message()` method from `BasePlugin`. Never call `connect_matrix()` directly in your plugins, as this will reinitialize the client and cause unnecessary credential reloading.
@@ -46,6 +67,7 @@ The Trunk binary is included in this repository at `.trunk/trunk`. To check and 
 ```
 
 This will:
+
 - Format your Python code with Black
 - Check for linting issues with Ruff and other tools
 - Apply automatic fixes where possible
