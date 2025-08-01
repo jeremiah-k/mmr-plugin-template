@@ -51,8 +51,8 @@ class Plugin(BasePlugin):
                 message_text = packet["decoded"]["text"].strip()
 
                 if message_text.lower() == "!example":
-                    # RECOMMENDED: Use the new message queue system
-                    # This automatically handles rate limiting and connection state
+                    # Send a response using the BasePlugin send_message method
+                    # This automatically handles queuing and rate limiting
                     success = self.send_message(
                         text="Hello from the example plugin!",
                         channel=channel,
@@ -62,17 +62,10 @@ class Plugin(BasePlugin):
                     )
 
                     if success:
-                        self.logger.info("Response queued successfully")
+                        self.logger.info("Response sent successfully")
                         return True  # Indicate we handled the message
                     else:
-                        self.logger.error("Failed to queue response")
-
-                # Alternative: Legacy method (still works - automatically queued in v1.1+)
-                # meshtastic_client.sendText(
-                #     text="Hello from the example plugin!",
-                #     channelIndex=channel,
-                #     destinationId=packet.get("fromId") if is_direct_message else None
-                # )
+                        self.logger.error("Failed to send response")
 
             # Return False if we didn't handle the message
             return False
