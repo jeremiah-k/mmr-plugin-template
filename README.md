@@ -4,7 +4,7 @@
 
 Fork this repo and create a new one with the name of your plugin, rename `example_plugin.py` to the name of your plugin and go from there.
 
-For more information on the basics of creating plugins see the [MMRelay Plugin Development Guide](https://github.com/geoffwhittington/meshtastic-matrix-relay/wiki/Plugin-Development-Guide).
+For more information on the basics of creating plugins see the [MMRelay Plugin Development Guide](https://github.com/jeremiah-k/meshtastic-matrix-relay/wiki/Plugin-Development-Guide).
 
 ## Important Notes
 
@@ -27,11 +27,9 @@ else:
     self.logger.error("Failed to send message")
 ```
 
-
-
 ### Matrix Client Usage
 
-Always use the `send_matrix_message()` method from `BasePlugin`. Never call `connect_matrix()` directly in your plugins, as this will reinitialize the client and cause unnecessary credential reloading.
+Always use the `send_matrix_message()` method from `BasePlugin`. The `connect_matrix()` function is safe to call multiple times, as it will only initialize the client on the first call. However, `send_matrix_message()` is the best practice as it is a convenient helper method that simplifies your code.
 
 ```python
 # Preferred method: Use send_matrix_message from BasePlugin.
