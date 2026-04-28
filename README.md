@@ -1,74 +1,88 @@
-# mmr-plugin-template
+# MMRelay Plugin Template
 
-## MMRelay Plugin Template
+Fork this repo and create a new one with the name of your plugin. Rename `example_plugin.py` to match your plugin name and customize from there.
 
-Fork this repo and create a new one with the name of your plugin, rename `example_plugin.py` to the name of your plugin and go from there.
+For a full walkthrough, see the [MMRelay Plugin Development Guide](https://github.com/jeremiah-k/meshtastic-matrix-relay/wiki/Plugin-Development-Guide).
 
-For more information on the basics of creating plugins see the [MMRelay Plugin Development Guide](https://github.com/jeremiah-k/meshtastic-matrix-relay/wiki/Plugin-Development-Guide).
+## Quick Start
 
-## Important Notes
+After forking and customizing, users can activate your plugin by pinning to a commit:
 
-### Sending Messages
+```yaml
+community-plugins:
+  your_plugin_name:
+    active: true
+    repository: https://github.com/YourUsername/your-plugin-repo.git
+    commit: 0123456789abcdef0123456789abcdef01234567
+```
 
-#### Sending Meshtastic Messages
+## Key Patterns
 
-Use the `send_message()` method from `BasePlugin`. This automatically handles queuing and rate limiting:
+### Sending Meshtastic Messages
+
+Use `self.send_message()` from `BasePlugin`. It handles queuing and rate limiting automatically:
 
 ```python
 success = self.send_message(
     text="Your message here",
-    channel=0,  # Channel index
-    destination_id=node_id  # Optional: for direct messages
+    channel=channel,
+    destination_id=packet.get("fromId") if is_direct_message else None,
 )
-
-if success:
-    self.logger.info("Message sent successfully")
-else:
-    self.logger.error("Failed to send message")
 ```
 
-### Matrix Client Usage
+### Sending Matrix Messages
 
-Always use the `send_matrix_message()` method from `BasePlugin`. The `connect_matrix()` function is safe to call multiple times, as it will only initialize the client on the first call. However, `send_matrix_message()` is the best practice as it is a convenient helper method that simplifies your code.
+Use `self.send_matrix_message()` from `BasePlugin`. Pass `reply_to_event_id` to thread responses:
 
 ```python
-# Preferred method: Use send_matrix_message from BasePlugin.
-# This method automatically handles checking if the matrix client is initialized and logs an error if it's not available.
-await self.send_matrix_message(room_id=room.room_id, message="Your message here")
+await self.send_matrix_message(
+    room.room_id,
+    "Your message here",
+    reply_to_event_id=event.event_id,
+)
 ```
 
-### Plugin Name Initialization
+### Checking Commands
 
-Define `plugin_name` as a class variable in your plugin class. This is the recommended way to identify your plugin:
+Use `bot_command()` with `self.get_require_bot_mention()` to respect the user's configuration:
 
 ```python
-class Plugin(BasePlugin):
-    plugin_name = "your_plugin_name"  # Define plugin_name as a class variable
-
-    # No need to override __init__() unless you need custom initialization
-
-    async def handle_meshtastic_message(self, packet, formatted_message, longname, meshnet_name):
-        # Your implementation here
-        pass
+if bot_command("your_command", event, require_mention=self.get_require_bot_mention()):
+    # handle the command
 ```
 
-## Code Quality Tools
+### Channel and DM Handling
 
-This template includes [Trunk](https://trunk.io) for code quality and formatting. Trunk helps maintain clean, consistent code by automatically checking for issues and applying fixes.
+Check whether to respond on a given channel:
 
-### Using Trunk
+```python
+is_direct_message = self.is_direct_message(packet)
+channel = packet.get("channel", 0)
 
-The Trunk binary is included in this repository at `.trunk/trunk`. To check and fix your code:
+if not self.is_channel_enabled(channel, is_direct_message=is_direct_message):
+    return False
+```
+
+### Response Delay
+
+Respect the configured response delay before sending mesh responses:
+
+```python
+import asyncio
+
+await asyncio.sleep(self.get_response_delay())
+```
+
+## Code Quality
+
+This template includes [Trunk](https://trunk.io) for code quality and formatting:
 
 ```bash
 .trunk/trunk check --fix --all
 ```
 
-This will:
+Trunk is completely optional but recommended. The configuration is in `.trunk/` and works out of the box.
 
-- Format your Python code with Black
-- Check for linting issues with Ruff and other tools
-- Apply automatic fixes where possible
-- Ensure your code follows best practices
+## Publishing
 
-Trunk is completely optional but recommended for maintaining high code quality. The configuration is already set up in the `.trunk` directory, so you can start using it immediately without any additional setup.
+See [Step 6 of the Plugin Development Guide](https://github.com/jeremiah-k/meshtastic-matrix-relay/wiki/Plugin-Development-Guide#step-6-publishing-and-versioning) for the recommended versioning and release workflow.
